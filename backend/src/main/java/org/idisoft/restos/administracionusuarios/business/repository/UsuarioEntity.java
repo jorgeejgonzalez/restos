@@ -24,7 +24,6 @@ import org.idisoft.restos.data.Registro;
 		name = UsuarioEntityConstantesORM.USUARIO_TABLE_NAME,
 		uniqueConstraints=
 		{
-				@UniqueConstraint(columnNames=UsuarioEntityConstantesORM.USUARIO_LOGIN_ATTRIBUTE_NAME),
 				@UniqueConstraint(columnNames=UsuarioEntityConstantesORM.USUARIO_EMAIL_ATTRIBUTE_NAME)
 		}
 )
