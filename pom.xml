@@ -31,11 +31,11 @@
     
     <!-- JBoss dependency versions -->
     <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
-    <version.wildfly>8.2.0.Final</version.wildfly>
+    <version.wildfly>8.0.0.Final</version.wildfly>
     <version.jboss.spec.javaee.7.0>1.0.0.Final</version.jboss.spec.javaee.7.0>
     
     <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
-    <version.jboss.bom.wildfly>8.2.1.Final</version.jboss.bom.wildfly>
+    <version.jboss.bom.wildfly>8.0.0.Final</version.jboss.bom.wildfly>
     
     <!-- other plugin versions -->
     <version.compiler.plugin>3.2.5</version.compiler.plugin>
@@ -50,7 +50,8 @@
     
     <!-- resteasy version -->
     <version.resteasy>3.0.6.Final</version.resteasy>
-     
+
+    <version.mockito>2.0.3-beta</version.mockito>
   </properties>
   
 </project>

@@ -67,8 +67,7 @@ public class UsuarioDTO implements Usuario {
 	}
 
 	@Override
-	public TipoUsuario getTipo() {
-		// TODO Auto-generated method stub
+	public TipoUsuario getTipo() {		
 		return tipo;
 	}
 
