@@ -32,7 +32,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 public class ArquillianArchiver {
 	
-	public static WebArchive warFile()
+	public static WebArchive getStandardWarFile()
 	{
 		WebArchive war=ShrinkWrap.create(WebArchive.class,"test.war");				
 		

@@ -40,6 +40,9 @@
    <!-- Arquillian REST Client -->
    <version.arquillian.resteasy.client>1.0.0.Alpha3</version.arquillian.resteasy.client>
    <version.resteasy>3.0.10.Final</version.resteasy> 
+   
+   <!-- Cukespace version -->
+   <version.cukespace>1.5.10</version.cukespace>
  </properties>
  
  
@@ -216,24 +219,32 @@
   </dependency>
   
   <!-- Arquillian REST Client for Acceptance tests -->
-		<dependency>
-    		<groupId>org.jboss.arquillian.extension</groupId>
-    		<artifactId>arquillian-rest-client-api</artifactId>
-    		<version>${version.arquillian.resteasy.client}</version>
-    		<scope>test</scope>
-		</dependency>
-		<dependency>
-    		<groupId>org.jboss.arquillian.extension</groupId>
-    		<artifactId>arquillian-rest-client-impl-3x</artifactId>
-    		<version>${version.arquillian.resteasy.client}</version>
-    		<scope>test</scope>
-		</dependency>
-        <dependency>
-    		<groupId>org.jboss.resteasy</groupId>
-    		<artifactId>resteasy-jackson-provider</artifactId>
-    		<version>${version.resteasy}</version>
-    		<scope>test</scope>
-		</dependency>
+  <dependency>
+    <groupId>org.jboss.arquillian.extension</groupId>
+    <artifactId>arquillian-rest-client-api</artifactId>
+    <version>${version.arquillian.resteasy.client}</version>
+    <scope>test</scope>
+  </dependency>
+  <dependency>
+    <groupId>org.jboss.arquillian.extension</groupId>
+    <artifactId>arquillian-rest-client-impl-3x</artifactId>
+    <version>${version.arquillian.resteasy.client}</version>
+    <scope>test</scope>
+  </dependency>
+  <dependency>
+    <groupId>org.jboss.resteasy</groupId>
+    <artifactId>resteasy-jackson-provider</artifactId>
+    <version>${version.resteasy}</version>
+    <scope>test</scope>
+  </dependency>
+  
+  <!-- Cukespace for cucumber tests -->
+  <dependency>
+    <groupId>com.github.cukespace</groupId>
+    <artifactId>cukespace-core</artifactId>
+    <version>${version.cukespace}</version>
+    <scope>test</scope>
+  </dependency>
 
   
  </dependencies>
@@ -263,239 +274,85 @@
 	</build>
 
 	<profiles>
-		<profile>
-			<!-- The default profile skips all tests, though you can tune it to run just unit tests based on a custom pattern -->
+        <profile>
+            <!-- The default profile skips all tests, though you can tune it to run 
+                just unit tests based on a custom pattern -->
+            <!-- Seperate profiles are provided for running all tests, including Arquillian 
+                tests that execute in the specified container -->
+            <id>default</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${version.surefire.plugin}</version>
+                        <configuration>
+                        	<!-- <argLine>-javaagent:${settings.localRepository}/org/jmockit/jmockit/${version.jmockit}/jmockit-${version.jmockit}.jar</argLine>
+      						<useSystemClassLoader>true</useSystemClassLoader>  -->
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
-			<!-- Seperate profiles are provided for running all tests, including Arquillian tests that execute in the specified container -->
-			<id>default</id>
-			<activation>
+        <profile>
 
-				<property>
-					<name>!default</name>
-				</property>
-			</activation>
-			<build>
-
-				<plugins>
-					<plugin>
-						<artifactId>maven-surefire-plugin</artifactId>
-
-						<version>${version.surefire.plugin}</version>
-						<configuration>
-							<skip>false</skip>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
-			<!-- An optional Arquillian testing profile that executes tests in your JBoss AS instance -->
-			<!-- This profile will start a new JBoss AS instance, and execute the test, shutting it down when done -->
-			<!-- Run with: mvn clean test -Parq-jbossas-managed -->
-			<id>arq-jbossas-managed</id>
-			<build>
-
-				<plugins>
-					<plugin>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<version>${version.surefire.plugin}</version>
-						<configuration>
-							<skip>false</skip>
-						</configuration>
-					</plugin>
-
-				</plugins>
-			</build>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.as</groupId>
-					<artifactId>jboss-as-arquillian-container-managed</artifactId>
-					<scope>test</scope>
-
-				</dependency>
-			</dependencies>
-		</profile>
-
-		<profile>
-			<!-- An optional Arquillian testing profile that executes tests
- in a remote JBoss AS instance -->
-			<!-- Run with: mvn clean test -Parq-jbossas-remote -->
-			<id>arq-jbossas-remote</id>
-
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-surefire-plugin</artifactId>
-
-						<version>${version.surefire.plugin}</version>
-						<configuration>
-							<skip>false</skip>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-			<dependencies>
-				<dependency>
-
-					<groupId>org.jboss.as</groupId>
-					<!-- <artifactId>jboss-as-arquillian-container-remote</artifactId> -->
- 
-                    <artifactId>jboss-as-arquillian-container-managed</artifactId>
+            <!-- An optional Arquillian testing profile that executes tests
+                in your WildFly instance -->
+            <!-- This profile will start a new WildFly instance, and execute the
+                test, shutting it down when done -->
+            <!-- Run with: mvn clean test -Parq-wildfly-managed -->
+            <id>arq-wildfly-managed</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <version>${version.arquillian.container}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
         </profile>
-        
-        <profile>
-
-        	<id>wildfy81-embedded</id>
-        	<!-- the dependencies for Wildfly8.1  -->
-   			<dependencies>
-
-   			<dependency>
-
-    				<groupId>org.wildfly</groupId>
-     				<artifactId>wildfly-arquillian-container-embedded</artifactId>
-
-    				<version>8.1.0.Final</version>
-    			</dependency>
-
-   			<dependency>
-     				<groupId>org.wildfly</groupId>
-     				<artifactId>wildfly-embedded</artifactId>
-     				<version>8.1.0.Final</version>
-
-  				</dependency>
- 			</dependencies>
-
-
-		 	<build>
-
-   			<plugins>
-      			<!-- You need the maven dependency plugin to download locally a zip with the server, unless you provide your own, it will download under the /target directory -->
-         			<plugin>
-        				<groupId>org.apache.maven.plugins</groupId>
-            			<artifactId>maven-dependency-plugin</artifactId>
-             			<version>2.8</version>
-
-            			<executions>
-                  			<execution>
-                     			<id>unpack</id>
-                        		<phase>process-test-classes</phase>
-
-                       		<goals>
-	                            	<goal>unpack</goal>
-    	                    	</goals>
-
-                       		<configuration>
-                            		<artifactItems>
-                                		<artifactItem>
-                                    		<groupId>org.wildfly</groupId>
-                                    		<artifactId>wildfly-dist</artifactId>
-                                    		<version>8.1.0.Final</version>
-
-                                   		<type>zip</type>
-                                    		<overWrite>false</overWrite>
-                                    		<outputDirectory>target</outputDirectory>
-                                		</artifactItem>
-                            		</artifactItems>
-
-                       		</configuration>
-                    		</execution>
-                		</executions>
-
-           		</plugin>
-
-          			<plugin>
-                		<groupId>org.apache.maven.plugins</groupId>
-                		<artifactId>maven-surefire-plugin</artifactId>
-                 		<version>2.17</version>
-                		<configuration>
-                  		<!-- Fork every test because it will launch a separate AS instance -->
-
-                   		<forkMode>always</forkMode>
-
-                   		<systemPropertyVariables>
-                        		<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                          		<!-- the maven dependency plugin will have already downloaded the server on /target -->
-                        		<jboss.home>${project.basedir}/target/wildfly-8.1.0.Final</jboss.home>
-                        		<module.path>${project.basedir}/target/wildfly-8.1.0.Final/modules</module.path>
-
-                   		</systemPropertyVariables>
-                    		<redirectTestOutputToFile>false</redirectTestOutputToFile>
-                		</configuration>
-            		</plugin>
-       
-    			</plugins>
-  			</build>
-		</profile>
 
         <profile>
-
-           <!-- When built in OpenShift the 'openshift' profile will be
-                used when invoking mvn. -->
-            <!-- Use this profile for any OpenShift specific customization
-                your app will need. -->
-
-           <!-- By default that is to put the resulting archive into the
-                'deployments' folder. -->
-
-           <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
-
-           <id>openshift</id>
-            <build>
-                <plugins>
-
-                   <plugin>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <version>${version.war.plugin}</version>
-                        <configuration>
-
-                           <outputDirectory>deployments</outputDirectory>
-                            <warName>restos</warName>
-
-                       </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-
-        </profile>
-
-        <profile>
-            <!-- Activate this profile to identify to the IDE which version of the JSF impl is being used by the
- application server.-->
-            <!-- Be sure to include the JBoss maven repository, as the JBoss jsf-impl artifacts are not in maven central. -->
-
-           <!-- See: https://community.jboss.org/wiki/MavenGettingStarted-Developers -->
-            <id>debug</id>
+            <!-- An optional Arquillian testing profile that executes tests
+                in a remote WildFly instance -->
+            <!-- Run with: mvn clean test -Parq-wildfly-remote -->
+            <id>arq-wildfly-remote</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <dependencies>
-                <!-- Import the JSF impl, to allow for application debugging -->
                 <dependency>
-                    <groupId>com.sun.faces</groupId>
-
-                   <artifactId>jsf-impl</artifactId>
-                    <scope>provided</scope>
+                    <groupId>org.wildfly</groupId>
+                    <artifactId>wildfly-arquillian-container-remote</artifactId>
+                    <version>${version.arquillian.container}</version>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
         </profile>
 
-        <!-- Activate JBoss Product Maven repository -->
         <profile>
-            <id>jboss-product-repository</id>
-            <activation>
-                <property>
-                    <name>!jboss-product-repository</name>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>jboss-products-ga-repo</id>
-                    <url>http://maven.repository.redhat.com/techpreview/all/</url>
-                </repository>
-            </repositories>
+            <!-- When built in OpenShift the 'openshift' profile will be used when 
+                invoking mvn. -->
+            <!-- Use this profile for any OpenShift specific customization your app 
+                will need. -->
+            <!-- By default that is to put the resulting archive into the 'deployments' 
+                folder. -->
+            <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
+            <id>openshift</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>${version.war.plugin}</version>
+                        <configuration>
+                            <outputDirectory>deployments</outputDirectory>
+                            <warName>ROOT</warName>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
 
-
-   </profiles>
+    </profiles>
 </project>

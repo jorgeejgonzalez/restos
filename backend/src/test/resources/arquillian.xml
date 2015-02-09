@@ -27,13 +27,12 @@
 
    <!-- Force the use of the Servlet 3.0 protocol with all containers, as it is the most mature -->
    	<defaultProtocol type="Servlet 3.0" />
-   
-   	<extension qualifier="cucumber">
-   		<property name="report">true</property>
-    	<property name="featureHome">src/test/resources/cucumber/features</property>
-    	<property name="report-directory">src/test/resources/cucumber/reports</property>
-    	<property name="persistenceEventsActivated">true</property>
-    </extension>
+   	
+   	 <extension qualifier="cucumber">
+   	   <property name="report">true</property>
+       <property name="report-directory">target/cucumber-report</property>
+       <property name="persistenceEventsActivated">true</property>
+     </extension>
 
      <!-- Example configuration for a remote WildFly instance -->
    	<container qualifier="jboss" default="true">

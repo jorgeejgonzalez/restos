@@ -32,10 +32,12 @@
     <!-- JBoss dependency versions -->
     <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
     <version.wildfly>8.0.0.Final</version.wildfly>
+    <version.arquillian.container>8.0.0.Final</version.arquillian.container>
     <version.jboss.spec.javaee.7.0>1.0.0.Final</version.jboss.spec.javaee.7.0>
     
     <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
     <version.jboss.bom.wildfly>8.0.0.Final</version.jboss.bom.wildfly>
+    
     
     <!-- other plugin versions -->
     <version.compiler.plugin>3.2.5</version.compiler.plugin>
@@ -53,5 +55,33 @@
 
     <version.mockito>2.0.3-beta</version.mockito>
   </properties>
+  
+  <profiles>
+		<profile>
+			<!-- The default profile skips all tests, though you can tune it to run just unit tests based on a custom pattern -->
+
+			<!-- Seperate profiles are provided for running all tests, including Arquillian tests that execute in the specified container -->
+			<id>default</id>
+			<activation>
+
+				<property>
+					<name>!default</name>
+				</property>
+			</activation>
+			<build>
+
+				<plugins>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+
+						<version>${version.surefire.plugin}</version>
+						<configuration>
+							<skip>false</skip>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+   </profiles>
   
 </project>
