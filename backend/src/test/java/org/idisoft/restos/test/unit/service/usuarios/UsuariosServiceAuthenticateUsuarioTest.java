@@ -15,14 +15,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class UsuariosServiceAuthenticateUsuarioTest extends AbstractUsuarioServiceTest
 {
-	private String testLogin;
+	private String testEmail;
 	private String testPassword;
 	
 	@Before
 	public void setUpInstanciacion()
 	{
 		instanciacion();
-		testLogin=TestEntitiesFactory.VALID_LOGIN;
+		testEmail=TestEntitiesFactory.VALID_EMAIL;
 		testPassword=TestEntitiesFactory.VALID_PASSWORD;
 	}	
 	
@@ -31,11 +31,11 @@ public class UsuariosServiceAuthenticateUsuarioTest extends AbstractUsuarioServi
 	public void AuthenticateUsuario_Success_ReturnsResponseOK() throws Exception
 	{
 		when(administradorUsuariosMock.auntenticarUsuario(
-				TestEntitiesFactory.VALID_LOGIN,
+				TestEntitiesFactory.VALID_EMAIL,
 				TestEntitiesFactory.VALID_PASSWORD)
 		).thenReturn(TestEntitiesFactory.validUsuario());
 		
-		Response responseCheck = usuarioService.authenticateUsuario(testLogin, testPassword);
+		Response responseCheck = usuarioService.authenticateUsuario(testEmail, testPassword);
 		assertOK(responseCheck);		
 	}
 	
@@ -55,11 +55,11 @@ public class UsuariosServiceAuthenticateUsuarioTest extends AbstractUsuarioServi
 	public void AuthenticateUsuario_InvalidPassword_ReturnsResponseNotAcceptable() throws Exception
 	{
 		when(administradorUsuariosMock.auntenticarUsuario(
-				TestEntitiesFactory.VALID_LOGIN, 
+				TestEntitiesFactory.VALID_EMAIL, 
 				"")
 		).thenThrow(new IllegalArgumentException());
 		
-		Response responseCheck = usuarioService.authenticateUsuario(testLogin,"");
+		Response responseCheck = usuarioService.authenticateUsuario(testEmail,"");
 		assertNotAcceptable(responseCheck);	
 	}
 	
@@ -67,11 +67,11 @@ public class UsuariosServiceAuthenticateUsuarioTest extends AbstractUsuarioServi
 	public void AuthenticateUsuario_LoginNotFound_ReturnsResponseNotFound() throws Exception
 	{
 		when(administradorUsuariosMock.auntenticarUsuario(
-				TestEntitiesFactory.VALID_LOGIN, 
+				TestEntitiesFactory.VALID_EMAIL, 
 				TestEntitiesFactory.VALID_PASSWORD)
 		).thenThrow(new NoResultException());
 		
-		Response responseCheck = usuarioService.authenticateUsuario(testLogin,testPassword);
+		Response responseCheck = usuarioService.authenticateUsuario(testEmail,testPassword);
 		assertNotFound(responseCheck);	
 	}
 	
@@ -79,11 +79,11 @@ public class UsuariosServiceAuthenticateUsuarioTest extends AbstractUsuarioServi
 	public void AuthenticateUsuario_PasswordNoMatch_ReturnsResponseUnauthorized() throws Exception
 	{
 		when(administradorUsuariosMock.auntenticarUsuario(
-				TestEntitiesFactory.VALID_LOGIN, 
+				TestEntitiesFactory.VALID_EMAIL, 
 				"anything")
 		).thenThrow(new AuthenticationException());
 		
-		Response responseCheck = usuarioService.authenticateUsuario(testLogin,"anything");
+		Response responseCheck = usuarioService.authenticateUsuario(testEmail,"anything");
 		assertUnauthorized(responseCheck);	
 	}
 	

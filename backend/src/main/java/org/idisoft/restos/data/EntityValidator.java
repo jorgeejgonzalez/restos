@@ -5,6 +5,7 @@ import java.util.Set;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
@@ -16,12 +17,20 @@ public class EntityValidator<T extends Registro> {
 	
 	
 	@Inject
-	public EntityValidator(ValidatorFactory validatorfactory)
+	public EntityValidator(final ValidatorFactory validatorfactory)
 	{
-		this.validatorfactory=validatorfactory;
+		if(validatorfactory!=null)
+		{
+			this.validatorfactory=validatorfactory;
+		}
+		else 
+		{
+			this.validatorfactory=Validation.buildDefaultValidatorFactory();
+		}
+		
 	}
 	
-	public void validate(T entity)
+	public void validate(final T entity)
 	{
 		Validator validator=validatorfactory.getValidator();
 		violations=validator.validate(entity);

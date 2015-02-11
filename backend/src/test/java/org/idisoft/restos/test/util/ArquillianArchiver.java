@@ -32,13 +32,21 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 public class ArquillianArchiver {
 	
+	public static WebArchive getIntegrationWarFile()
+	{
+		WebArchive war = getStandardWarFile();		
+		war.addAsResource("META-INF/persistence.xml");
+		war.addAsResource("META-INF/test-persistence-integration.xml");		
+		war.addAsWebInfResource("test-ds-integration.xml");
+		System.out.println(war.toString(true));
+		return war;
+	}
+	
 	public static WebArchive getStandardWarFile()
 	{
-		WebArchive war=ShrinkWrap.create(WebArchive.class,"test.war");				
+		WebArchive war=ShrinkWrap.create(WebArchive.class,"test.war");
 		
 		war.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-		war.addAsResource("META-INF/persistence.xml");
-		war.addAsWebInfResource("restostest-ds.xml");
 		
 		war.addClasses(
 				CDIPersistenceResources.class,
@@ -83,9 +91,9 @@ public class ArquillianArchiver {
 				UsuariosServiceRest.class
 				);
 		
-		war.addClasses(
-				AbstractRestServiceTest.class				
-				);
+		war.addClasses(AbstractRestServiceTest.class);
+		
+		war.addClasses(TestEntitiesFactory.class);
 				
 		return war;
 	}

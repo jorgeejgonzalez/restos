@@ -9,7 +9,7 @@ import javax.validation.ValidatorFactory;
 public class CDIPersistenceResources {
 	
 	@Produces
-    @PersistenceContext
+    @PersistenceContext(unitName="RestosBackend")
     private EntityManager entityManager;
 	
 	@Produces

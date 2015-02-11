@@ -9,7 +9,6 @@ import org.idisoft.restos.data.EstatusRegistro;
 public class TestEntitiesFactory {
 	
 	public static String VALID_CEDULA="V123456789";
-	public static String VALID_LOGIN="unittest";
 	public static String VALID_PASSWORD="unittest";
 	public static String VALID_EMAIL="unit@test.com";
 	public static String VALID_NOMBRE="unit";
